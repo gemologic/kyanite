@@ -1,0 +1,17 @@
+[package]
+name = "kyanite"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+regex = "1.0"
+num_cpus = "1.0"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "signal"] }
+
+# Static linking configuration
+[profile.release]
+lto = true              # Link-time optimization
+codegen-units = 1       # Better optimization
+panic = "abort"         # Smaller binary
+strip = true            # Strip debug symbols
