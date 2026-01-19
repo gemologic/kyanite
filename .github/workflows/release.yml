@@ -68,3 +68,28 @@ jobs:
         with:
           name: kyanite-${{ matrix.artifact_suffix }}
           path: kyanite-${{ matrix.artifact_suffix }}.*
+
+  release:
+    name: publish release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: download artifacts
+        uses: actions/download-artifact@v6
+        with:
+          path: artifacts
+
+      - name: flatten files
+        run: |
+          mkdir release-files
+          find artifacts -type f -name 'kyanite-*' -exec mv {} release-files/ \;
+
+      - name: upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-files/*
+          tag_name: ${{ github.ref_name }}
+          make_latest: true
+          generate_release_notes: true
