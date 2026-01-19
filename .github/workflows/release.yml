@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    name: build on ${{ matrix.os }}
+    name: build ${{ matrix.target }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -24,10 +24,6 @@ jobs:
             target: aarch64-unknown-linux-gnu
             artifact_name: kyanite
             artifact_suffix: linux-aarch64
-          - os: macos-latest
-            target: x86_64-apple-darwin
-            artifact_name: kyanite
-            artifact_suffix: macos-amd64
           - os: macos-latest
             target: aarch64-apple-darwin
             artifact_name: kyanite
@@ -54,6 +50,8 @@ jobs:
 
       - name: build
         run: cargo build --release --target ${{ matrix.target }}
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: prepare artifact
         shell: bash
